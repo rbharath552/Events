@@ -1,29 +1,91 @@
 import { useState } from "react";
+import axios from "axios";
 import UserContext from "./UserContext";
 
- const UserProvider = ({ children }) => {
+const UserProvider = ({ children }) => {
+
   const [user, setUser] = useState(null);
 
-  const register = (data) => {
-    localStorage.setItem("user", JSON.stringify(data));
-    setUser(data);
-  };
+  // Backend URL
+  const API = "https://event-38as.onrender.com/api/auth";
 
-  const login = (data) => {
-    const stored = JSON.parse(localStorage.getItem("user"));
-    if (stored?.email === data.email && stored?.password === data.password) {
-      setUser(stored);
-    } else {
-      alert("Invalid credentials");
+  // REGISTER
+  const register = async (data) => {
+
+    try {
+
+      const response = await axios.post(
+        `${API}/register`,
+        data
+      );
+
+      console.log(response.data);
+
+      setUser(response.data.user);
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify(response.data.user)
+      );
+
+      return response.data;
+
+    } catch (error) {
+
+      console.log(error);
+
+      alert("Registration Failed");
+
     }
   };
 
+  // LOGIN
+  const login = async (data) => {
+
+    try {
+
+      const response = await axios.post(
+        `${API}/login`,
+        data
+      );
+
+      console.log(response.data);
+
+      setUser(response.data.user);
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify(response.data.user)
+      );
+
+      return response.data;
+
+    } catch (error) {
+
+      console.log(error);
+
+      alert("Invalid Credentials");
+
+    }
+  };
+
+  // LOGOUT
   const logout = () => {
+
     setUser(null);
+
+    localStorage.removeItem("user");
   };
 
   return (
-    <UserContext.Provider value={{ user, register, login, logout }}>
+    <UserContext.Provider
+      value={{
+        user,
+        register,
+        login,
+        logout,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );

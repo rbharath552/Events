@@ -1,10 +1,9 @@
 import { useState } from "react";
-
-import { useNavigate } from "react-router-dom";
-import User from "../context/User";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Register() {
-  const { register } = User();
+
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -13,42 +12,124 @@ export default function Register() {
     password: "",
   });
 
-  const handleSubmit = (e) => {
-    
+  const handleSubmit = async (e) => {
+
     e.preventDefault();
-    register(form);
-    navigate("/dashboard");
+
+    try {
+
+      // API CALL TO BACKEND
+      const res = await axios.post(
+        "https://event-38as.onrender.com/api/auth/register",
+        form
+      );
+
+      console.log(res.data);
+
+      // STORE USER DATA
+      localStorage.setItem(
+        "user",
+        JSON.stringify(res.data.user)
+      );
+
+      alert("User Registered Successfully");
+
+      navigate("/dashboard");
+
+    } catch (err) {
+
+      console.log(err);
+
+      alert("Registration Failed");
+    }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <form onSubmit={handleSubmit} className="p-6 border rounded w-80">
-        <h2 className="text-xl mb-4">Register</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-emerald-100 to-green-200">
 
-        <input
-          type="text"
-          placeholder="Name"
-          className="w-full mb-3 p-2 border"
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
-        />
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-sm p-8 rounded-2xl bg-white/70 backdrop-blur-lg shadow-xl border border-gray-200"
+      >
 
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full mb-3 p-2 border"
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-        />
+        <h2 className="text-3xl font-bold text-center bg-gradient-to-r from-emerald-600 to-green-500 text-transparent bg-clip-text mb-6">
+          Create Account
+        </h2>
 
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full mb-3 p-2 border"
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-        />
+        {/* NAME */}
+        <div className="mb-4">
+          <label className="text-sm text-gray-600">
+            Name
+          </label>
 
-        <button className="bg-green-500 text-white w-full py-2 rounded">
+          <input
+            type="text"
+            placeholder="Enter your name"
+            className="w-full mt-1 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+            onChange={(e) =>
+              setForm({
+                ...form,
+                name: e.target.value,
+              })
+            }
+          />
+        </div>
+
+        {/* EMAIL */}
+        <div className="mb-4">
+          <label className="text-sm text-gray-600">
+            Email
+          </label>
+
+          <input
+            type="email"
+            placeholder="Enter your email"
+            className="w-full mt-1 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+            onChange={(e) =>
+              setForm({
+                ...form,
+                email: e.target.value,
+              })
+            }
+          />
+        </div>
+
+        {/* PASSWORD */}
+        <div className="mb-5">
+          <label className="text-sm text-gray-600">
+            Password
+          </label>
+
+          <input
+            type="password"
+            placeholder="Create a password"
+            className="w-full mt-1 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+            onChange={(e) =>
+              setForm({
+                ...form,
+                password: e.target.value,
+              })
+            }
+          />
+        </div>
+
+        {/* BUTTON */}
+        <button className="w-full py-3 rounded-lg bg-emerald-500 text-white font-semibold hover:bg-emerald-600 transition duration-300">
           Register
         </button>
+
+        {/* LOGIN LINK */}
+        <p className="text-center text-sm text-gray-500 mt-4">
+          Already have an account?{" "}
+
+          <Link
+            to="/login"
+            className="text-emerald-600 hover:underline"
+          >
+            Login
+          </Link>
+        </p>
+
       </form>
     </div>
   );
