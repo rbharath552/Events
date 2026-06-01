@@ -1,70 +1,142 @@
 import { useState } from "react";
+import { CalendarDays, MapPin, FileText, Type } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-export default function Dashboard() {
-  const [events, setEvents] = useState([]);
-  const [title, setTitle] = useState("");
+export default function CreateEvent() {
+  const navigate = useNavigate();
+  const [form, setForm] = useState({
+    title: "",
+    description: "",
+    date: "",
+    location: "",
+  });
 
-  const addEvent = () => {
-    if (!title) return;
-    setEvents([...events, { title, joined: false }]);
-    setTitle("");
+ const handleSubmit = (e) => {
+  e.preventDefault();
+
+  const eventData = {
+    ...form,
+    id: Date.now(),
   };
+   console.log(eventData);
+  alert("Event Created Successfully 🎉");
 
-  const toggleRSVP = (index) => {
-    const updated = [...events];
-    updated[index].joined = !updated[index].joined;
-    setEvents(updated);
-  };
-
+  navigate(`/events/${eventData.id}`, {
+    state: eventData,
+  });
+};
   return (
-   <div className="min-h-screen bg-gradient-to-br from-slate-100 via-indigo-100 to-blue-200 p-6">
-
-  
-  <h1 className="text-3xl font-bold text-center bg-gradient-to-r from-indigo-600 to-blue-500 text-transparent bg-clip-text mb-8">
-    My Events
-  </h1>
-
-  
-  <div className="max-w-xl mx-auto flex gap-3 mb-8 bg-white/70 backdrop-blur-lg p-4 rounded-2xl shadow-md border border-gray-200">
-    <input
-      value={title}
-      onChange={(e) => setTitle(e.target.value)}
-      className="flex-1 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-      placeholder="Enter event title..."
-    />
-
-    <button
-      onClick={addEvent}
-      className="px-5 py-2 rounded-lg bg-indigo-500 text-white font-medium hover:bg-indigo-600 shadow-md hover:shadow-lg transition duration-300"
-    >
-      Add
-    </button>
-  </div>
-
-  
-  <div className="max-w-xl mx-auto space-y-4">
-    {events.map((event, index) => (
-      <div
-        key={index}
-        className="flex justify-between items-center p-5 rounded-2xl bg-white/70 backdrop-blur-lg border border-gray-200 shadow-md hover:shadow-xl transition duration-300"
+    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-blue-100 flex items-center justify-center px-4 py-10">
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-xl bg-white/80 backdrop-blur-lg border border-white/30 shadow-2xl rounded-3xl p-8"
       >
-        <span className="text-gray-800 font-medium">
-          {event.title}
-        </span>
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-800">
+            Create Event
+          </h1>
+          <p className="text-gray-500 mt-2">
+            Fill in the details to organize your event
+          </p>
+        </div>
 
-        <button
-          onClick={() => toggleRSVP(index)}
-          className={`px-4 py-2 rounded-lg text-sm font-semibold text-white transition duration-300 shadow ${
-            event.joined
-              ? "bg-emerald-500 hover:bg-emerald-600"
-              : "bg-gray-400 hover:bg-gray-500"
-          }`}
-        >
-          {event.joined ? "Joined" : "Join"}
+        {/* Title */}
+        <div className="mb-5">
+          <label className="text-sm font-medium text-gray-700 mb-2 block">
+            Event Title
+          </label>
+
+          <div className="flex items-center border border-gray-300 rounded-xl px-4 py-3 focus-within:ring-2 focus-within:ring-indigo-500 transition">
+            <Type className="text-gray-400 mr-3" size={20} />
+
+            <input
+              type="text"
+              placeholder="Enter event title"
+              className="w-full outline-none bg-transparent"
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  title: e.target.value,
+                })
+              }
+            />
+          </div>
+        </div>
+
+        {/* Description */}
+        <div className="mb-5">
+          <label className="text-sm font-medium text-gray-700 mb-2 block">
+            Description
+          </label>
+
+          <div className="flex border border-gray-300 rounded-xl px-4 py-3 focus-within:ring-2 focus-within:ring-indigo-500 transition">
+            <FileText className="text-gray-400 mr-3 mt-1" size={20} />
+
+            <textarea
+              rows="4"
+              placeholder="Write event description..."
+              className="w-full outline-none bg-transparent resize-none"
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  description: e.target.value,
+                })
+              }
+            />
+          </div>
+        </div>
+
+        {/* Date */}
+        <div className="mb-5">
+          <label className="text-sm font-medium text-gray-700 mb-2 block">
+            Event Date
+          </label>
+
+          <div className="flex items-center border border-gray-300 rounded-xl px-4 py-3 focus-within:ring-2 focus-within:ring-indigo-500 transition">
+            <CalendarDays className="text-gray-400 mr-3" size={20} />
+
+            <input
+              type="date"
+               min={new Date().toISOString().split("T")[0]}
+              className="w-full outline-none bg-transparent"
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  date: e.target.value,
+                })
+              }
+            />
+          </div>
+        </div>
+
+        {/* Location */}
+        <div className="mb-7">
+          <label className="text-sm font-medium text-gray-700 mb-2 block">
+            Location
+          </label>
+
+          <div className="flex items-center border border-gray-300 rounded-xl px-4 py-3 focus-within:ring-2 focus-within:ring-indigo-500 transition">
+            <MapPin className="text-gray-400 mr-3" size={20} />
+
+            <input
+              type="text"
+              placeholder="Enter location"
+              className="w-full outline-none bg-transparent"
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  location: e.target.value,
+                })
+              }
+            />
+          </div>
+        </div>
+
+        {/* Button */}
+        <button   type="submit" className="w-full bg-gradient-to-r from-indigo-600 to-blue-500 text-white py-3 rounded-xl font-semibold text-lg hover:from-indigo-700 hover:to-blue-600 transition duration-300 shadow-lg hover:shadow-xl">
+          Create Event
         </button>
-      </div>
-    ))}
-  </div>
-</div>
+      </form>
+    </div>
   );
 }
