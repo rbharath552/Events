@@ -84,7 +84,7 @@ function Landing() {
       
       <div className="p-5">
         <p className="text-gray-500">{event.date}</p>
-               <button  onClick={() => navigate("/Dashboard")}className="mt-5 w-full py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-500 text-white font-medium hover:from-indigo-700 hover:to-blue-600 transition duration-300 shadow-md hover:shadow-lg">
+               <button  onClick={() => navigate("/register")}className="mt-5 w-full py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-500 text-white font-medium hover:from-indigo-700 hover:to-blue-600 transition duration-300 shadow-md hover:shadow-lg">
                 Book Now
               </button>
         
