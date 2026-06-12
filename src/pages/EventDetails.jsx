@@ -1,5 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
 import {
   CalendarDays,
   MapPin,
@@ -21,6 +23,26 @@ export default function EventDetails() {
       </div>
     );
   }
+
+  const handleRegister = async () => {
+  try {
+    const res = await axios.post(
+      "https://event-38as.onrender.com/api/auth/event",
+      event
+    );
+
+    console.log(res.data);
+
+    alert("Event Registered Successfully");
+
+    navigate("/my-events", {
+      state: event,
+    });
+  } catch (err) {
+    console.log(err);
+    alert("Registration Failed");
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 flex items-center justify-center p-6">
@@ -94,7 +116,7 @@ export default function EventDetails() {
   
 
           {/* Action Button */}
-            <button      onClick={() => navigate("/my-events", {state: event,})} className="w-full mt-4 py-3 rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold shadow-lg hover:scale-[1.02] transition duration-300">
+            <button      onClick={handleRegister} className="w-full mt-4 py-3 rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold shadow-lg hover:scale-[1.02] transition duration-300">
               Register Now
             </button>
         </div>
