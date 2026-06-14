@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   CalendarDays,
   MapPin,
@@ -9,7 +9,12 @@ import {
 export default function MyEvents() {
   const location = useLocation();
   const event = location.state;
-
+  const navigate= useNavigate();
+ 
+  const handleLogout=()=>{
+     localStorage.clear();
+        navigate("/");
+  }
   if (!event) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100">
@@ -100,11 +105,26 @@ export default function MyEvents() {
                   {event.description}
                 </p>
               </div>
+
+   
             </div>
 
           </div>
         </div>
       </div>
+     
+       
+  <div className="flex justify-center mt-6">
+  <button
+    onClick={handleLogout}
+    className="flex items-center gap-2 px-5 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl shadow-lg transition"
+  >
+    Logout
+  </button>
+</div>
+
     </div>
+    
+    
   );
 }
