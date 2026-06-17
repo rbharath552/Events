@@ -5,6 +5,7 @@ import axios from "axios";
 export default function Login() {
 
   const navigate = useNavigate();
+   const [errors, setErrors] = useState({});
 
   const [form, setForm] = useState({
     email: "",
@@ -14,6 +15,32 @@ export default function Login() {
   const handleSubmit = async (e) => {
 
     e.preventDefault();
+
+      let newErrors = {};
+
+  // Email Validation
+  if (!form.email.trim()) {
+    newErrors.email = "Email is required";
+  } else if (
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)
+  ) {
+    newErrors.email = "Please enter a valid email";
+  }
+
+  // Password Validation
+  if (!form.password.trim()) {
+    newErrors.password = "Password is required";
+  } else if (form.password.length < 6) {
+    newErrors.password =
+      "Password must be at least 6 characters";
+  }
+
+  setErrors(newErrors);
+
+  if (Object.keys(newErrors).length > 0) {
+    return;
+  }
+
 
     try {
 
@@ -57,42 +84,74 @@ export default function Login() {
         </h2>
 
         {/* Email */}
-        <div className="mb-4">
-          <label className="text-sm text-gray-600">
-            Email
-          </label>
+      <div className="mb-4">
+  <label className="text-sm text-gray-600">
+    Email
+  </label>
 
-          <input
-            type="email"
-            placeholder="Enter your email"
-            className="w-full mt-1 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            onChange={(e) =>
-              setForm({
-                ...form,
-                email: e.target.value,
-              })
-            }
-          />
-        </div>
+  <input
+    type="email"
+    placeholder="Enter your email"
+    value={form.email}
+    className={`w-full mt-1 p-3 rounded-lg border ${
+      errors.email
+        ? "border-red-500"
+        : "border-gray-300"
+    } focus:outline-none focus:ring-2 focus:ring-indigo-400`}
+    onChange={(e) => {
+      setForm({
+        ...form,
+        email: e.target.value,
+      });
+
+      setErrors({
+        ...errors,
+        email: "",
+      });
+    }}
+  />
+
+  {errors.email && (
+    <p className="text-red-500 text-sm mt-1">
+      {errors.email}
+    </p>
+  )}
+</div>
 
         {/* Password */}
-        <div className="mb-5">
-          <label className="text-sm text-gray-600">
-            Password
-          </label>
+      <div className="mb-5">
+  <label className="text-sm text-gray-600">
+    Password
+  </label>
 
-          <input
-            type="password"
-            placeholder="Enter your password"
-            className="w-full mt-1 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            onChange={(e) =>
-              setForm({
-                ...form,
-                password: e.target.value,
-              })
-            }
-          />
-        </div>
+  <input
+    type="password"
+    placeholder="Enter your password"
+    value={form.password}
+    className={`w-full mt-1 p-3 rounded-lg border ${
+      errors.password
+        ? "border-red-500"
+        : "border-gray-300"
+    } focus:outline-none focus:ring-2 focus:ring-indigo-400`}
+    onChange={(e) => {
+      setForm({
+        ...form,
+        password: e.target.value,
+      });
+
+      setErrors({
+        ...errors,
+        password: "",
+      });
+    }}
+  />
+
+  {errors.password && (
+    <p className="text-red-500 text-sm mt-1">
+      {errors.password}
+    </p>
+  )}
+</div>
 
         {/* Button */}
         <button className="w-full py-3 rounded-lg bg-indigo-500 text-white font-semibold hover:bg-indigo-600 transition duration-300">
